@@ -1,7 +1,9 @@
-export type Difficulty = "easy" | "medium" | "hard";
+export const quizWordList = {
+  easy: ["SOS", "HI", "OK"],
+  medium: ["HELLO", "WORLD"],
+  hard: ["MORSE", "CODE"],
+} as const;
 
-export const quizWordList: Record<Difficulty, string[]> = {
-  easy: ["SOS", "HI", "OK", "YES", "NO"],
-  medium: ["HELLO", "WORLD", "MORSE", "CODE", "FAST"],
-  hard: ["DEVELOPER", "ALGORITHM", "REACT", "NEXTJS", "LEARNING"],
-};
+export type Difficulty = keyof typeof quizWordList;
+
+export type DifficultyOption = Difficulty | "random";

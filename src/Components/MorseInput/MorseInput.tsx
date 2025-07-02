@@ -3,100 +3,125 @@
 import { useEffect, useRef, useState } from "react";
 import { morseToChar, morseWords } from "@/Lib/morseMap";
 
-const MorseInput = () => {
-  const [morseCode, setMorseCode] = useState("");
-  const [result, setResult] = useState<string[]>([]);
-  const [pressStart, setPressStart] = useState<number | null>(null);
+type Props = {
+  value?: string;
+  onChange?: (val: string) => void;
+  translate?: boolean;
+};
+
+export default function MorseInput({
+  value,
+  onChange,
+  translate = true,
+}: Props) {
+  /* ---------- حالت کنترل‌شده یا داخلی ---------- */
+  const [internal, setInternal] = useState("");
+  const morse = value !== undefined ? value : internal;
+  const setMorse = onChange !== undefined ? onChange : setInternal;
+
+  /* ---------- refs ---------- */
+  const morseRef = useRef(morse);
+  const pressStartRef = useRef<number | null>(null);
+  const lastSignalRef = useRef<number>(Date.now());
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const lastSignalTime = useRef<number>(Date.now());
 
-  // Keyboard handling
+  /* برای ترجمه‌ی اتوماتیک */
+  const [result, setResult] = useState<string[]>([]);
+
+  /* همیشه morse تازه را در ref نگه داریم */
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.code === "Space" && pressStart === null) {
+    morseRef.current = morse;
+  }, [morse]);
+
+  /* ---------- Keyboard events ---------- */
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.code === "Space" && pressStartRef.current === null) {
         e.preventDefault();
-        setPressStart(Date.now());
+        pressStartRef.current = Date.now();
       }
     };
 
-    const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.code === "Space" && pressStart !== null) {
-        const duration = Date.now() - pressStart;
-        setPressStart(null);
+    const up = (e: KeyboardEvent) => {
+      if (e.code === "Space" && pressStartRef.current !== null) {
+        const duration = Date.now() - pressStartRef.current;
         const signal = duration < 300 ? "." : "-";
-        setMorseCode((prev) => prev + signal);
-        lastSignalTime.current = Date.now();
-        resetAfterPause();
+        pressStartRef.current = null;
+        setMorse(morseRef.current + signal);
+        lastSignalRef.current = Date.now();
+        scheduleTranslate();
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-
+    window.addEventListener("keydown", down);
+    window.addEventListener("keyup", up);
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("keydown", down);
+      window.removeEventListener("keyup", up);
     };
-  }, [pressStart]);
+  }, []); // فقط یک‌بار وصل می‌کنیم؛ refs همیشه تازه‌اند
 
-  // Touch handling
-  const touchStartRef = useRef<number | null>(null);
+  /* ---------- Touch events ---------- */
+  const touchRef = useRef<number | null>(null);
 
-  const handleTouchStart = () => {
-    touchStartRef.current = Date.now();
+  const touchStart = () => {
+    touchRef.current = Date.now();
   };
 
-  const handleTouchEnd = () => {
-    if (touchStartRef.current !== null) {
-      const duration = Date.now() - touchStartRef.current;
-      const signal = duration < 300 ? "." : "-";
-      setMorseCode((prev) => prev + signal);
-      touchStartRef.current = null;
-      lastSignalTime.current = Date.now();
-      resetAfterPause();
+  const touchEnd = () => {
+    if (touchRef.current !== null) {
+      const dur = Date.now() - touchRef.current;
+      const signal = dur < 300 ? "." : "-";
+      touchRef.current = null;
+      setMorse(morseRef.current + signal);
+      lastSignalRef.current = Date.now();
+      scheduleTranslate();
     }
   };
 
-  // Pause detection
-  const resetAfterPause = () => {
+  /* ---------- ترجمه بعد از مکث ---------- */
+  const scheduleTranslate = () => {
+    if (!translate) return;
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
     timeoutRef.current = setTimeout(() => {
-      const now = Date.now();
-      const timeDiff = now - lastSignalTime.current;
+      const code = morseRef.current;
+      if (!code) return;
 
-      if (morseWords[morseCode]) {
-        // کامل مثل SOS
-        setResult((prev) => [...prev, morseWords[morseCode]]);
-      } else if (morseCode.length > 0) {
-        const char = morseToChar[morseCode] || "?";
-        setResult((prev) => [...prev, char]);
+      if (morseWords[code]) {
+        setResult((p) => [...p, morseWords[code]]);
+      } else {
+        const ch = morseToChar[code] || "?";
+        setResult((p) => [...p, ch]);
       }
 
-      setMorseCode("");
-
-      // اگر فاصله خیلی زیاد بود (مثلاً 2s)، کلمه جدید
-      if (timeDiff > 2000) {
-        setResult((prev) => [...prev, " "]);
+      // فاصله بین کلمات (pause طولانی‌تر از 2s)
+      if (Date.now() - lastSignalRef.current > 2000) {
+        setResult((p) => [...p, " "]);
       }
+
+      setMorse(""); // پاک‌کردن ورودی
     }, 1200);
   };
 
+  /* ---------- UI ---------- */
   return (
-    <div className="flex flex-col items-center gap-6 text-center">
-      <div className="text-xl font-mono">Morse: {morseCode}</div>
-      <div className="text-3xl font-bold break-words max-w-xs">
-        Result: {result.join("")}
-      </div>
+    <div className="flex flex-col items-center gap-4 text-center">
+      <div className="text-lg font-mono text-gray-700">Morse: {morse}</div>
+
+      {translate && (
+        <div className="text-3xl font-bold break-words max-w-xs">
+          {result.join("")}
+        </div>
+      )}
 
       <div
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
+        onTouchStart={touchStart}
+        onTouchEnd={touchEnd}
         className="w-48 h-48 rounded-full bg-blue-500 text-white flex items-center justify-center text-xl select-none active:bg-blue-700"
       >
         لمس برای مورس
       </div>
     </div>
   );
-};
-
-export default MorseInput;
+}

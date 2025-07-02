@@ -3,6 +3,11 @@ import "./globals.css";
 import CheatSheetModal from "@/Components/CheatSheetModal/CheatSheetModal";
 import ModeSwitcher from "@/Components/ModeSwitcher/ModeSwitcher";
 
+export const metadata = {
+  title: "Morse Code",
+  description:
+    "Morse Code is a method of encoding text into a series of dots and dashes.",
+};
 
 export default function RootLayout({
   children,
