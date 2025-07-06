@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <main className="w-full h-screen flex flex-col items-center justify-center gap-6">
-      {mode === "morse" && <MorseInput translate />}
+      {mode === "morse" && <MorseInput />}
       {mode === "text" && <TextInput />}
       {mode === "quiz" && <Quiz />}
     </main>

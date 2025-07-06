@@ -54,7 +54,7 @@ const TextInput = () => {
       .toUpperCase()
       .split("")
       .map((char) => (char === " " ? " " : charToMorse[char] || "?"))
-      .join("  ");
+      .join(" ");
   };
 
   const morse = convertToMorse(text);
