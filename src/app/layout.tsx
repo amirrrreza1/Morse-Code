@@ -15,7 +15,7 @@ export const metadata = {
   appleTouchIcon: "/Images/apple.png",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "black",
     startupImage: [
       {
         url: "/Images/Icon-512.png",

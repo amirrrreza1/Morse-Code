@@ -13,7 +13,6 @@ export default function MorseManualInput() {
   const [pasteState, setPasteState] = useState<PasteState>("idle");
   const hasShownError = useRef(false);
 
-  /* live convert */
   useEffect(() => {
     const trimmed = input.trim();
 
@@ -47,7 +46,6 @@ export default function MorseManualInput() {
     setOutput(res.join(""));
   }, [input, toast]);
 
-  /* paste */
   const handlePaste = async () => {
     let state: PasteState = "idle";
 
