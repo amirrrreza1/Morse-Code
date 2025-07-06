@@ -2,6 +2,7 @@ import { ModeProvider } from "@/Contex/ModeContext";
 import "./globals.css";
 import CheatSheetModal from "@/Components/CheatSheetModal/CheatSheetModal";
 import ModeSwitcher from "@/Components/ModeSwitcher/ModeSwitcher";
+import { ToastProvider } from "@/Components/Toast/Toast";
 
 export const metadata = {
   title: "Morse Code",
@@ -17,15 +18,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="relative min-h-screen bg-gray-50">
-        <ModeProvider>
-          <CheatSheetModal />
+        <ToastProvider>
+          <ModeProvider>
+            <CheatSheetModal />
 
-          <div className="w-[95%] max-w-lg h-[50px] mx-auto flex justify-around border-b bg-black fixed  right-1/2 top-2.5 z-40 translate-x-1/2 rounded-lg shadow-lg">
-            <ModeSwitcher />
-          </div>
+            <div className="w-[95%] max-w-lg h-[50px] mx-auto flex justify-around border-b bg-black fixed  right-1/2 top-2.5 z-40 translate-x-1/2 rounded-lg shadow-lg">
+              <ModeSwitcher />
+            </div>
 
-          {children}
-        </ModeProvider>
+            {children}
+          </ModeProvider>
+        </ToastProvider>
       </body>
     </html>
   );

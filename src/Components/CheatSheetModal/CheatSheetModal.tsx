@@ -33,7 +33,7 @@ const CheatSheetModal = () => {
           onClick={() => setOpen(false)}
         >
           <div
-            className="relative w-full h-full max-w-md max-h-[80vh] flex flex-col bg-white rounded-2xl overflow-hidden"
+            className="relative w-[95%] h-full max-w-md max-h-[80vh] flex flex-col bg-white rounded-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
