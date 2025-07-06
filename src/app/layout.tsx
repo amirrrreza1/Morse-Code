@@ -5,9 +5,23 @@ import ModeSwitcher from "@/Components/ModeSwitcher/ModeSwitcher";
 import { ToastProvider } from "@/Components/Toast/Toast";
 
 export const metadata = {
-  title: "Morse Code",
+  title: "Morse Code Converter",
   description:
-    "Morse Code is a method of encoding text into a series of dots and dashes.",
+    "A Morse Code Converter that allows you to convert text to Morse and morse to text practically in your br",
+  icons: {
+    icon: [{ url: "Images/favicon.ico", sizes: "196x196", type: "image/png" }],
+    apple: [{ url: "/Images/apple.png" }],
+  },
+  appleTouchIcon: "/Images/apple.png",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    startupImage: [
+      {
+        url: "/Images/Icon-512.png",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
