@@ -14,7 +14,6 @@ export default function MorseTouchInput() {
   const lastSignal = useRef(Date.now());
   const timer = useRef<NodeJS.Timeout | null>(null);
   const pressStart = useRef<number | null>(null);
-  const touchStart = useRef<number | null>(null);
 
   const pushSignal = (sig: "." | "-") => {
     const next = currentRef.current + sig;
@@ -40,20 +39,10 @@ export default function MorseTouchInput() {
 
   const deleteLastWord = () => {
     setOutput((prev) => {
-      const withoutTrailingSpaces = [...prev];
-      while (
-        withoutTrailingSpaces.length &&
-        withoutTrailingSpaces[withoutTrailingSpaces.length - 1] === " "
-      ) {
-        withoutTrailingSpaces.pop();
-      }
-      while (
-        withoutTrailingSpaces.length &&
-        withoutTrailingSpaces[withoutTrailingSpaces.length - 1] !== " "
-      ) {
-        withoutTrailingSpaces.pop();
-      }
-      return withoutTrailingSpaces;
+      const copy = [...prev];
+      while (copy.length && copy.at(-1) === " ") copy.pop();
+      while (copy.length && copy.at(-1) !== " ") copy.pop();
+      return copy;
     });
   };
 
@@ -63,7 +52,6 @@ export default function MorseTouchInput() {
         e.preventDefault();
         pressStart.current = Date.now();
       }
-
       if (e.code === "Backspace") {
         e.preventDefault();
         deleteLastWord();
@@ -86,11 +74,11 @@ export default function MorseTouchInput() {
     };
   }, []);
 
-  const handlePressStart = () => (touchStart.current = Date.now());
-  const handlePressEnd = () => {
-    if (touchStart.current != null) {
-      const dur = Date.now() - touchStart.current;
-      touchStart.current = null;
+  const handlePointerDown = () => (pressStart.current = Date.now());
+  const handlePointerUp = () => {
+    if (pressStart.current != null) {
+      const dur = Date.now() - pressStart.current;
+      pressStart.current = null;
       pushSignal(dur < 300 ? "." : "-");
     }
   };
@@ -100,18 +88,18 @@ export default function MorseTouchInput() {
       <div className="w-full font-mono text-lg text-gray-700 min-h-[1.5rem]">
         Morse:
         <div className="w-[95%] mx-auto text-2xl border min-h-[2.5rem] max-w-md flex items-center justify-center text-center px-2">
-          {current.length > 0 ? (
+          {current ? (
             current
           ) : (
             <span className="text-gray-400 text-xl">
-              Hold Space or Click/Touch
+              Hold Space or Press / Touch
             </span>
           )}
         </div>
       </div>
 
       <div className="w-[95%] text-3xl font-bold break-words min-h-[3.5rem] border p-2 max-w-md flex items-center justify-center text-center">
-        {output.length > 0 ? (
+        {output.length ? (
           output.join("")
         ) : (
           <span className="text-gray-400 font-normal text-xl">
@@ -130,11 +118,9 @@ export default function MorseTouchInput() {
       </div>
 
       <div
-        onTouchStart={handlePressStart}
-        onTouchEnd={handlePressEnd}
-        onMouseDown={handlePressStart}
-        onMouseUp={handlePressEnd}
-        className="sm:hidden w-30 h-20 rounded-full bg-black text-white flex items-center justify-center text-xl select-none active:scale-105 cursor-pointer transition shadow-lg"
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        className="select-none sm:hidden w-30 h-20 rounded-full bg-black text-white flex items-center justify-center text-xl active:scale-105 cursor-pointer transition shadow-lg"
       >
         Hold
       </div>
