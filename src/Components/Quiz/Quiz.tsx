@@ -109,15 +109,15 @@ export default function Quiz() {
   if (step === "result")
     return (
       <div className="text-center space-y-4">
-        <h2 className="text-2xl font-bold">نتیجه آزمون</h2>
+        <h2 className="text-2xl font-bold">Quiz Result</h2>
         <p>
-          امتیاز شما: {score} از {questions.length}
+          Your score: {score} out of {questions.length}
         </p>
         <button
           onClick={() => setStep("config")}
           className="bg-blue-600 text-white px-4 py-2 rounded"
         >
-          شروع مجدد
+          Try Again
         </button>
       </div>
     );
@@ -129,7 +129,7 @@ export default function Quiz() {
   return (
     <div className="space-y-4 max-w-md mx-auto">
       <h2 className="font-bold">
-        سؤال {idx + 1} از {questions.length}
+        Question {idx + 1} of {questions.length}
       </h2>
 
       <div className="bg-gray-100 text-lg font-mono p-4 rounded text-center">
@@ -139,16 +139,6 @@ export default function Quiz() {
       {expectMorse ? (
         /* ===== ورودی مورس ===== */
         <div className="space-y-2 text-center">
-          <p className="text-gray-600">
-            با <kbd className="px-1 bg-gray-300 rounded">Space</kbd> دات/دش بزن.
-            <br />
-            برای ثبت پاسخ <kbd className="px-1 bg-gray-300 rounded">
-              Enter
-            </kbd>{" "}
-            بزن.
-          </p>
-
-          {/* استفاده از همان کامپوننت قبلی (captureOnly = true) */}
           <MorseInput
             value={morseAnswer}
             onChange={setMorseAnswer}
@@ -159,7 +149,7 @@ export default function Quiz() {
             onClick={handleSubmit}
             className="bg-blue-600 text-white px-4 py-2 rounded"
           >
-            ثبت پاسخ
+            Submit Answer
           </button>
         </div>
       ) : (

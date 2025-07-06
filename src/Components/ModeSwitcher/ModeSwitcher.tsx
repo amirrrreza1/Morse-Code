@@ -2,7 +2,6 @@
 
 import { useMode } from "@/Contex/ModeContext";
 
-
 const ModeSwitcher = () => {
   const { mode, setMode } = useMode();
 
@@ -12,9 +11,9 @@ const ModeSwitcher = () => {
         <button
           key={m}
           onClick={() => setMode(m as any)}
-          className={`px-4 py-2 rounded ${
-            mode === m ? "bg-blue-600 text-white" : "bg-gray-200"
-          }`}
+          className={`rounded ${
+            mode === m ? "bg-white text-black" : "bg-black text-white"
+          } my-2 py-1 px-2`}
         >
           {m === "morse"
             ? "Morse → Text"

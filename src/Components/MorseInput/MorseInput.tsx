@@ -25,10 +25,11 @@ export default function MorseInput({
   const lastSignalRef = useRef<number>(Date.now());
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  /* برای ترجمه‌ی اتوماتیک */
+  /* ---------- states ---------- */
   const [result, setResult] = useState<string[]>([]);
+  const [error, setError] = useState(false);
 
-  /* همیشه morse تازه را در ref نگه داریم */
+  /* همواره مقدار تازهٔ morse را در ref نگه دار */
   useEffect(() => {
     morseRef.current = morse;
   }, [morse]);
@@ -59,7 +60,7 @@ export default function MorseInput({
       window.removeEventListener("keydown", down);
       window.removeEventListener("keyup", up);
     };
-  }, []); // فقط یک‌بار وصل می‌کنیم؛ refs همیشه تازه‌اند
+  }, []);
 
   /* ---------- Touch events ---------- */
   const touchRef = useRef<number | null>(null);
@@ -79,7 +80,7 @@ export default function MorseInput({
     }
   };
 
-  /* ---------- ترجمه بعد از مکث ---------- */
+  /* ---------- ترجمه پس از مکث ---------- */
   const scheduleTranslate = () => {
     if (!translate) return;
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -90,17 +91,21 @@ export default function MorseInput({
 
       if (morseWords[code]) {
         setResult((p) => [...p, morseWords[code]]);
+      } else if (morseToChar[code]) {
+        setResult((p) => [...p, morseToChar[code]]);
       } else {
-        const ch = morseToChar[code] || "?";
-        setResult((p) => [...p, ch]);
+        /* --- کد نامعتبر --- */
+        setError(true);
+        setTimeout(() => setError(false), 1500);
+        /* هیچ چیز به result افزوده نمی‌شود */
       }
 
-      // فاصله بین کلمات (pause طولانی‌تر از 2s)
+      /* فاصلهٔ بزرگ → فاصلهٔ کلمه */
       if (Date.now() - lastSignalRef.current > 2000) {
         setResult((p) => [...p, " "]);
       }
 
-      setMorse(""); // پاک‌کردن ورودی
+      setMorse(""); // پاک‌کردن ورودی فعلی
     }, 1200);
   };
 
@@ -108,6 +113,12 @@ export default function MorseInput({
   return (
     <div className="flex flex-col items-center gap-4 text-center">
       <div className="text-lg font-mono text-gray-700">Morse: {morse}</div>
+
+      {error && (
+        <div className="text-red-600 text-sm font-semibold">
+          کد مورس نامعتبر بود!
+        </div>
+      )}
 
       {translate && (
         <div className="text-3xl font-bold break-words max-w-xs">
@@ -118,7 +129,7 @@ export default function MorseInput({
       <div
         onTouchStart={touchStart}
         onTouchEnd={touchEnd}
-        className="w-48 h-48 rounded-full bg-blue-500 text-white flex items-center justify-center text-xl select-none active:bg-blue-700"
+        className="w-48 h-48 rounded-full bg-blue-500 text-white flex items-center justify-center text-xl select-none active:bg-blue-700 sm:hidden"
       >
         لمس برای مورس
       </div>
