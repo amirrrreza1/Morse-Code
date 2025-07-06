@@ -99,7 +99,7 @@ export default function MorseTouchInput() {
     <div className="w-screen flex flex-col items-center gap-4 text-center">
       <div className="w-full font-mono text-lg text-gray-700 min-h-[1.5rem]">
         Morse:
-        <div className="w-[95%] mx-auto text-2xl border rounded min-h-[2.5rem] max-w-md flex items-center justify-center text-center px-2">
+        <div className="w-[95%] mx-auto text-2xl border min-h-[2.5rem] max-w-md flex items-center justify-center text-center px-2">
           {current.length > 0 ? (
             current
           ) : (
@@ -110,7 +110,7 @@ export default function MorseTouchInput() {
         </div>
       </div>
 
-      <div className="w-[95%] text-3xl font-bold break-words min-h-[3.5rem] border rounded p-2 max-w-md flex items-center justify-center text-center">
+      <div className="w-[95%] text-3xl font-bold break-words min-h-[3.5rem] border p-2 max-w-md flex items-center justify-center text-center">
         {output.length > 0 ? (
           output.join("")
         ) : (
@@ -123,7 +123,7 @@ export default function MorseTouchInput() {
       <div className="w-[95%] max-w-md flex justify-end">
         <button
           onClick={deleteLastWord}
-          className="px-4 py-1 bg-black text-white rounded hover:scale-105 active:scale-100 transition duration-200"
+          className="px-4 py-1 bg-black text-white hover:scale-105 active:scale-100 transition duration-200"
         >
           Delete
         </button>

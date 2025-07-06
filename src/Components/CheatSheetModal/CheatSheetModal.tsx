@@ -18,10 +18,9 @@ const CheatSheetModal = () => {
 
   return (
     <>
-      {/* Floating ! button */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-4 right-4 z-50 w-10 h-10 bg-black text-white rounded-full text-2xl flex items-center justify-center shadow-md hover:scale-105 transition"
+        className="fixed bottom-4 right-4 z-50 w-10 h-10 bg-black text-white text-2xl flex items-center justify-center shadow-md hover:scale-105 transition"
         title="نمایش راهنما"
       >
         !

@@ -27,7 +27,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
 
     setTimeout(() => {
       setToasts((p) => p.filter((t) => t.id !== tid));
-    }, 3000 + 300); // 3s نمایش + 0.3s خروج
+    }, 3000 + 300);
   };
 
   return (
@@ -37,7 +37,6 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
       {mounted &&
         typeof document !== "undefined" &&
         createPortal(
-          /* ظرف کلی Toastها */
           <div className="fixed pointer-events-none top-[70px] md:top-3 right-3 z-50 space-y-2">
             {toasts.map((t) => (
               <Toast key={t.id} message={t.message} />
@@ -61,7 +60,7 @@ const Toast = ({ message }: { message: string }) => {
 
   return (
     <div
-      className={`bg-black text-white font-mono px-4 py-2 rounded shadow-md text-sm ${
+      className={`bg-black text-white font-mono px-4 py-2 shadow-md text-sm ${
         exit ? "toast-out" : "toast-in"
       }`}
     >

@@ -22,7 +22,7 @@ export default function RootLayout({
           <ModeProvider>
             <CheatSheetModal />
 
-            <div className="w-[95%] max-w-lg h-[50px] mx-auto flex justify-around border-b bg-black fixed  right-1/2 top-2.5 z-40 translate-x-1/2 rounded-lg shadow-lg">
+            <div className="w-[95%] max-w-lg h-[50px] mx-auto flex justify-around border-b bg-black fixed  right-1/2 top-2.5 z-40 translate-x-1/2 shadow-lg">
               <ModeSwitcher />
             </div>
 

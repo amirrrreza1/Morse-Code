@@ -2,7 +2,7 @@
 
 @layer base {
   * {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: monospace;
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -21,7 +21,11 @@
   }
 
   .ModeSelectorBTN {
-    @apply w-full py-2 bg-black text-white rounded cursor-pointer font-mono;
+    @apply w-full py-2 bg-black text-white cursor-pointer font-mono;
+  }
+
+  .QuizAnswerBTN {
+    @apply bg-black text-white w-full py-2 hover:scale-105 active:scale-100 transition duration-200;
   }
 }
 

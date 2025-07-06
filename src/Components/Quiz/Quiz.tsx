@@ -1,175 +1,129 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { quizWordList, Difficulty, DifficultyOption } from "@/Lib/quizWords";
+import { useState } from "react";
+import { quizWordList } from "@/Lib/quizWords";
 import { charToMorse } from "@/Lib/morseMap";
 import QuizConfig from "../QuizConfig/QuizConfig";
-import MorseInput from "../MorseInput/MorseInput";
+import { useToast } from "../Toast/Toast";
 
 type Mode = "morse-to-text" | "text-to-morse" | "mixed";
-
-type Question = {
-  word: string;
-  prompt: string; // چیزی که به کاربر نمایش می‌دهیم
-  expected: string; // پاسخی که باید وارد کند
-};
+type Question = { prompt: string; expected: string };
 
 export default function Quiz() {
-  /* ---------- state ---------- */
-  const [step, setStep] = useState<"config" | "quiz" | "result">("config");
-  const [config, setConfig] = useState<{
-    mode: Mode;
-    difficulty: DifficultyOption;
-  } | null>(null);
+  const toast = useToast();
 
+  const [step, setStep] = useState<"config" | "quiz">("config");
+  const [mode, setMode] = useState<Mode>("morse-to-text");
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [idx, setIdx] = useState(0);
-  const [score, setScore] = useState(0);
+  const [index, setIndex] = useState(0);
 
-  /* پاسخ‌های کاربر */
-  const [textAnswer, setTextAnswer] = useState(""); // وقتی انتظار متن است
-  const [morseAnswer, setMorseAnswer] = useState(""); // وقتی انتظار مورس است
+  const [textAns, setTextAns] = useState("");
+  const [morseAns, setMorseAns] = useState("");
+  const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
 
-  /* ---------- helpers ---------- */
-  const isMorseString = (str: string) => /^[.\- ]+$/.test(str);
+  const isMorse = (str: string) => /^[.\- ]+$/.test(str);
 
-  // Quiz.tsx
-  const buildQuiz = ({
-    mode,
-    difficulty,
-  }: {
-    mode: Mode;
-    difficulty: DifficultyOption;
-  }) => {
-    const pool =
-      difficulty === "random"
-        ? Object.values(quizWordList).flat()
-        : quizWordList[difficulty as keyof typeof quizWordList];
+  const startQuiz = ({ mode }: { mode: Mode }) => {
+    setMode(mode);
 
+    const pool = [...quizWordList];
     const selected = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5);
 
-    /* 2) ساخت سؤال‌ها */
     const qs: Question[] = selected.map((word) => {
-      const actualMode: Mode =
+      const currentMode =
         mode === "mixed"
           ? Math.random() > 0.5
             ? "text-to-morse"
             : "morse-to-text"
           : mode;
 
-      if (actualMode === "text-to-morse") {
-        return {
-          word,
-          prompt: word,
-          expected: word
-            .split("")
-            .map((c) => charToMorse[c.toUpperCase()] || "")
-            .join(" "),
-        };
-      } else {
-        return {
-          word,
-          prompt: word
-            .split("")
-            .map((c) => charToMorse[c.toUpperCase()] || "")
-            .join(" "),
-          expected: word.toUpperCase(),
-        };
-      }
+      return currentMode === "text-to-morse"
+        ? {
+            prompt: word,
+            expected: word
+              .toUpperCase()
+              .split("")
+              .map((c) => charToMorse[c] || "")
+              .join(" "),
+          }
+        : {
+            prompt: word
+              .toUpperCase()
+              .split("")
+              .map((c) => charToMorse[c] || "")
+              .join(" "),
+            expected: word.toUpperCase(),
+          };
     });
 
     setQuestions(qs);
-    setIdx(0);
-    setScore(0);
-    setTextAnswer("");
-    setMorseAnswer("");
-    setConfig({ mode, difficulty });
+    setIndex(0);
+    setTextAns("");
+    setMorseAns("");
+    setFeedback(null);
     setStep("quiz");
   };
 
-  /* ---------- رویداد ارسال ---------- */
-  const handleSubmit = () => {
-    const q = questions[idx];
-    const user = isMorseString(q.expected)
-      ? morseAnswer.trim()
-      : textAnswer.trim().toUpperCase();
+  const checkAnswer = () => {
+    const q = questions[index];
+    const user = isMorse(q.expected)
+      ? morseAns.trim()
+      : textAns.trim().toUpperCase();
 
-    if (user === q.expected.toUpperCase()) setScore((p) => p + 1);
+    const correct = user === q.expected.toUpperCase();
+    setFeedback(correct ? "correct" : "wrong");
+    toast(correct ? "Correct ✅" : "Wrong ❌");
 
-    setTextAnswer("");
-    setMorseAnswer("");
-
-    if (idx + 1 < questions.length) setIdx((i) => i + 1);
-    else setStep("result");
+    setTimeout(() => {
+      setTextAns("");
+      setMorseAns("");
+      setFeedback(null);
+      setIndex((i) => (i + 1) % questions.length);
+    }, 1500);
   };
 
-  /* ---------- UI ---------- */
-  if (step === "config") return <QuizConfig onStart={buildQuiz} />;
+  if (step === "config") return <QuizConfig onStart={startQuiz} />;
 
-  if (step === "result")
-    return (
-      <div className="text-center space-y-4">
-        <h2 className="text-2xl font-bold">Quiz Result</h2>
-        <p>
-          Your score: {score} out of {questions.length}
-        </p>
-        <button
-          onClick={() => setStep("config")}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Try Again
-        </button>
-      </div>
-    );
+  const q = questions[index];
+  const expectMorse = isMorse(q.expected);
 
-  /* ---------- مرحله Quiz ---------- */
-  const q = questions[idx];
-  const expectMorse = isMorseString(q.expected); // حالا دقیق!
+  const inputBorder =
+    feedback === "correct"
+      ? "bg-green-600 text-white"
+      : feedback === "wrong"
+      ? "bg-red-600 text-white"
+      : "border-black";
 
   return (
-    <div className="space-y-4 max-w-md mx-auto">
-      <h2 className="font-bold">
-        Question {idx + 1} of {questions.length}
-      </h2>
-
-      <div className="bg-gray-100 text-lg font-mono p-4 rounded text-center">
+    <div className="w-[95%] space-y-6 max-w-md mx-auto">
+      <div className="bg-white border border-black p-4 text-center font-mono">
         {q.prompt}
       </div>
 
       {expectMorse ? (
-        /* ===== ورودی مورس ===== */
-        <div className="space-y-2 text-center">
-          <MorseInput
-            value={morseAnswer}
-            onChange={setMorseAnswer}
-            translate={false}
-          />
-
-          <button
-            onClick={handleSubmit}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Submit Answer
-          </button>
-        </div>
+        <input
+          value={morseAns}
+          onChange={(e) => setMorseAns(e.target.value.replace(/[^.\- ]/g, ""))}
+          placeholder="Enter - or ."
+          className={`border ${inputBorder} p-2 w-full text-center`}
+        />
       ) : (
-        /* ===== ورودی متن ===== */
-        <div className="space-y-2">
-          <input
-            value={textAnswer}
-            onChange={(e) => setTextAnswer(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-            placeholder="پاسخ را وارد کنید"
-            className="border p-2 rounded w-full text-lg text-center"
-          />
-          <button
-            onClick={handleSubmit}
-            className="bg-blue-600 text-white w-full py-2 rounded"
-          >
-            ثبت پاسخ
-          </button>
-        </div>
+        <input
+          value={textAns}
+          onChange={(e) => setTextAns(e.target.value)}
+          placeholder="Enter answer"
+          className={`border ${inputBorder} text-2xl p-2 w-full text-center`}
+        />
       )}
+
+      <div className="flex gap-4">
+        <button onClick={checkAnswer} className="QuizAnswerBTN">
+          Check
+        </button>
+        <button onClick={() => setStep("config")} className="QuizAnswerBTN">
+          Exit
+        </button>
+      </div>
     </div>
   );
 }

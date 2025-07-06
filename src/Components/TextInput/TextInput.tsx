@@ -2,45 +2,7 @@
 
 import { useState } from "react";
 import { useToast } from "../Toast/Toast";
-
-const charToMorse: Record<string, string> = {
-  A: ".-",
-  B: "-...",
-  C: "-.-.",
-  D: "-..",
-  E: ".",
-  F: "..-.",
-  G: "--.",
-  H: "....",
-  I: "..",
-  J: ".---",
-  K: "-.-",
-  L: ".-..",
-  M: "--",
-  N: "-.",
-  O: "---",
-  P: ".--.",
-  Q: "--.-",
-  R: ".-.",
-  S: "...",
-  T: "-",
-  U: "..-",
-  V: "...-",
-  W: ".--",
-  X: "-..-",
-  Y: "-.--",
-  Z: "--..",
-  "0": "-----",
-  "1": ".----",
-  "2": "..---",
-  "3": "...--",
-  "4": "....-",
-  "5": ".....",
-  "6": "-....",
-  "7": "--...",
-  "8": "---..",
-  "9": "----.",
-};
+import { charToMorse } from "@/Lib/morseMap";
 
 type Status = "idle" | "copied" | "error";
 
@@ -88,11 +50,11 @@ const TextInput = () => {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Enter text here"
-        className="w-full p-2 border font-mono border-gray-300 rounded text-center text-xl"
+        className="w-full p-2 border font-mono border-gray-300 text-center text-xl"
       />
 
       <div className="text-xl text-center font-mono break-words w-full">
-        <div className="flex items-center justify-between w-full border p-2 rounded bg-gray-50">
+        <div className="flex items-center justify-between w-full border p-2 bg-gray-50">
           <p className="flex-1 text-2xl whitespace-pre-wrap break-words min-h-[2rem]">
             {morse}
           </p>

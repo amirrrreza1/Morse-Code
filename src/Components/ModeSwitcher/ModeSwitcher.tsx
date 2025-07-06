@@ -11,9 +11,9 @@ const ModeSwitcher = () => {
         <button
           key={m}
           onClick={() => setMode(m as any)}
-          className={`rounded ${
+          className={`${
             mode === m ? "bg-white text-black" : "bg-black text-white"
-          } my-2 py-1 px-2`}
+          } my-2 py-1 px-2 text-[14px]`}
         >
           {m === "morse"
             ? "Morse → Text"
