@@ -120,7 +120,7 @@ export default function MorseTouchInput() {
       <div
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
-        className="select-none sm:hidden w-30 h-20 rounded-full bg-black text-white flex items-center justify-center text-xl active:scale-105 cursor-pointer transition shadow-lg"
+        className="select-none sm:hidden w-30 h-20 bg-black text-white flex items-center justify-center text-xl active:scale-105 cursor-pointer transition shadow-lg"
       >
         Hold
       </div>
