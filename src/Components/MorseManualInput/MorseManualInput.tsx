@@ -83,6 +83,13 @@ export default function MorseManualInput() {
     <div className="flex flex-col items-center gap-4 text-center w-screen">
       <div className="flex items-center gap-2 w-[95%] max-w-xs mx-auto border border-black p-2">
         <input
+          type="text"
+          inputMode="text"
+          pattern="[.\-\s]*"
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
           value={input}
           onChange={(e) => {
             const val = e.target.value;
