@@ -111,7 +111,14 @@ export default function MorseTouchInput() {
       <div className="w-[95%] max-w-md flex justify-end">
         <button
           onClick={deleteLastWord}
-          className="px-4 py-1 bg-black text-white hover:scale-105 active:scale-100 transition duration-200"
+          onContextMenu={(e) => e.preventDefault()}
+          className="px-4 py-1 bg-black text-white hover:scale-105 active:scale-100 transition duration-200 select-none"
+          style={{
+            touchAction: "none",
+            WebkitUserSelect: "none",
+            userSelect: "none",
+            WebkitTapHighlightColor: "transparent",
+          }}
         >
           Delete
         </button>
