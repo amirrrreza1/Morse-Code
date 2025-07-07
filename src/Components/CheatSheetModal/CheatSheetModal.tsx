@@ -20,7 +20,14 @@ const CheatSheetModal = () => {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="absolute w-8 h-8 bottom-4 right-4 text-sm bg-black text-white border border-black hover:bg-white hover:text-black transition"
+        className="absolute w-8 h-8 bottom-4 right-4 text-sm bg-black text-white border border-black hover:bg-white hover:text-black transition select-none"
+        onContextMenu={(e) => e.preventDefault()}
+        style={{
+          userSelect: "none",
+          WebkitUserSelect: "none",
+          WebkitTapHighlightColor: "transparent",
+          touchAction: "none",
+        }}
         title="Open Cheat Sheet"
       >
         !
