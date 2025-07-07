@@ -72,7 +72,7 @@ export default function Quiz() {
 
     const correct = user === q.expected.toUpperCase();
     setFeedback(correct ? "correct" : "wrong");
-    toast(correct ? "Correct ✅" : "Wrong ❌");
+    toast(correct ? "Correct" : "Wrong");
 
     setTimeout(() => {
       setTextAns("");

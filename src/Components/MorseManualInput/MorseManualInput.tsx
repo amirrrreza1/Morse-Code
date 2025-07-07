@@ -25,7 +25,7 @@ export default function MorseManualInput() {
     if (!/^[.\-\s]+$/.test(trimmed)) {
       setOutput("");
       if (!hasShownError.current) {
-        toast("Only dot (.), dash (-), and space are allowed!");
+        toast("Use - or .");
         hasShownError.current = true;
       }
       return;
@@ -54,18 +54,18 @@ export default function MorseManualInput() {
 
       if (!clip) {
         state = "error";
-        toast("Clipboard is empty ❌");
+        toast("Clipboard is empty");
       } else if (!/^[.\-\s]+$/.test(clip)) {
         state = "error";
-        toast("Invalid characters in clipboard ❌");
+        toast("Invalid characters in clipboard");
       } else {
         setInput(clip);
         state = "success";
-        toast("Pasted from clipboard ✅");
+        toast("Pasted from clipboard");
       }
     } catch {
       state = "error";
-      toast("Clipboard access failed ❌");
+      toast("Clipboard access failed");
     }
 
     setPasteState(state);
@@ -96,7 +96,7 @@ export default function MorseManualInput() {
             if (/^[.\-\s]*$/.test(val)) {
               setInput(val);
             } else if (!hasShownError.current) {
-              toast("Only dot (.), dash (-), and space are allowed!");
+              toast("Invalid Characters!");
               hasShownError.current = true;
             }
           }}

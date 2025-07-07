@@ -20,7 +20,7 @@ const CheatSheetModal = () => {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-4 right-4 z-50 w-10 h-10 bg-black text-white text-2xl flex items-center justify-center shadow-md hover:scale-105 transition"
+        className="absolute w-8 h-8 bottom-4 right-4 text-sm bg-black text-white border border-black hover:bg-white hover:text-black transition"
         title="Open Cheat Sheet"
       >
         !

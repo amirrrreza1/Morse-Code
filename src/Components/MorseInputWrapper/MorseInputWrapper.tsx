@@ -15,7 +15,7 @@ export default function MorseInputWrapper() {
       {mode !== null && (
         <button
           onClick={() => setMode(null)}
-          className="absolute bottom-4 left-4 text-sm px-3 py-1 border border-black hover:bg-black hover:text-white transition"
+          className="absolute bottom-4 left-4 text-sm px-3 py-1 border bg-black text-white border-black hover:bg-white hover:text-black transition"
         >
           Change Mode
         </button>
