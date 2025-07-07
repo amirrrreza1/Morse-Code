@@ -84,21 +84,23 @@ export default function MorseTouchInput() {
   };
 
   return (
-    <div className="w-screen flex flex-col items-center gap-4 text-center">
+    <div
+      className="w-screen flex flex-col items-center gap-4 text-center select-none"
+      onContextMenu={(e) => e.preventDefault()}
+      style={{
+        userSelect: "none",
+        WebkitUserSelect: "none",
+        WebkitTapHighlightColor: "transparent",
+        touchAction: "none",
+      }}
+    >
       <div className="w-full font-mono text-lg text-gray-700 min-h-[1.5rem]">
         Morse:
         <div className="w-[95%] mx-auto text-2xl border min-h-[2.5rem] max-w-md flex items-center justify-center text-center px-2">
           {current ? (
             current
           ) : (
-            <span
-              className="text-gray-400 text-xl select-none"
-              style={{
-                userSelect: "none",
-                WebkitUserSelect: "none",
-                WebkitTapHighlightColor: "transparent",
-              }}
-            >
+            <span className="text-gray-400 text-xl select-none">
               Hold Space or Press / Touch
             </span>
           )}
@@ -109,14 +111,7 @@ export default function MorseTouchInput() {
         {output.length ? (
           output.join("")
         ) : (
-          <span
-            className="text-gray-400 font-normal text-xl select-none"
-            style={{
-              userSelect: "none",
-              WebkitUserSelect: "none",
-              WebkitTapHighlightColor: "transparent",
-            }}
-          >
+          <span className="text-gray-400 font-normal text-xl select-none">
             No Words Yet
           </span>
         )}
@@ -125,14 +120,7 @@ export default function MorseTouchInput() {
       <div className="w-[95%] max-w-md flex justify-end">
         <button
           onClick={deleteLastWord}
-          onContextMenu={(e) => e.preventDefault()}
           className="px-4 py-1 bg-black text-white hover:scale-105 active:scale-100 transition duration-200 select-none"
-          style={{
-            touchAction: "none",
-            WebkitUserSelect: "none",
-            userSelect: "none",
-            WebkitTapHighlightColor: "transparent",
-          }}
         >
           Delete
         </button>
@@ -141,14 +129,7 @@ export default function MorseTouchInput() {
       <div
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
-        onContextMenu={(e) => e.preventDefault()}
         className="select-none sm:hidden w-30 h-20 bg-black text-white flex items-center justify-center text-xl active:scale-105 cursor-pointer transition shadow-lg"
-        style={{
-          touchAction: "none",
-          WebkitUserSelect: "none",
-          userSelect: "none",
-          WebkitTapHighlightColor: "transparent",
-        }}
       >
         Hold
       </div>
