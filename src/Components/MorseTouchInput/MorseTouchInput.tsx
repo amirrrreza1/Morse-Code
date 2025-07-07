@@ -91,8 +91,15 @@ export default function MorseTouchInput() {
           {current ? (
             current
           ) : (
-            <span className="text-gray-400 text-xl">
-              Hold Space or Press / Touch
+            <span
+              className="text-gray-400 text-xl select-none"
+              style={{
+                userSelect: "none",
+                WebkitUserSelect: "none",
+                WebkitTapHighlightColor: "transparent",
+              }}
+            >
+              Hold Space or Press / Touch
             </span>
           )}
         </div>
@@ -102,7 +109,14 @@ export default function MorseTouchInput() {
         {output.length ? (
           output.join("")
         ) : (
-          <span className="text-gray-400 font-normal text-xl">
+          <span
+            className="text-gray-400 font-normal text-xl select-none"
+            style={{
+              userSelect: "none",
+              WebkitUserSelect: "none",
+              WebkitTapHighlightColor: "transparent",
+            }}
+          >
             No Words Yet
           </span>
         )}
